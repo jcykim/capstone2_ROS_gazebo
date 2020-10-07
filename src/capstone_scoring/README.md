@@ -28,3 +28,7 @@ rosrun capstone_scoring stop.py
 ```python
 goal_y =  np.random.uniform([lower bound],[upper bound])
 ```
+# Cantact
+
+"Do Hakgi" <kevindo@kaist.ac.kr>,
+"Bae Jaewoong" <jwoong.bae@kaist.ac.kr>,
