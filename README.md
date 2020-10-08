@@ -109,7 +109,7 @@ to
 ```
 <arg name="odom_frame" default="base_footprint"/>
 ```
-- add
+add
 ```
 <param name="tf_map_scanmatch_transform_frame_name" value="$(arg tf_map_scanmatch_transform_frame_name)" />
 ```
