@@ -99,9 +99,9 @@ cd launch
 gedit mapping_default.launch
 ```
 
-- In mapping_default.launch:
+- In mapping_default.launch file:
 
-- change 
+change 
 ```
 <arg name="odom_frame" default="nav"/>
 ```
