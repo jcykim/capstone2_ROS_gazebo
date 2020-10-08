@@ -1,0 +1,13 @@
+material test2
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture ../texture/test2.jpg
+      }
+    }
+  }
+}
