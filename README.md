@@ -16,9 +16,44 @@ git clone https://github.com/kaistcapstone/capstone2_ROS_gazebo
 ```
 build the code
 ```
-cd ~/capstone1_ROS_gazebo
+
+# Install object detection library
+```
+cd ~/capstone2_ROS_gazebo
+sudo pip install -r requirements.txt
+```
+
+(if work in python3)
+```
+cd ~/capstone2_ROS_gazebo
+sudo pip install -r requirements.txt
+```
+
+```
+cd ~/capstone2_ROS_gazebo
 catkin_make
 ```
+
+# Install Hector SLAM
+
+- In terminal:
+
+```
+sudo apt install ros-melodic-hector-slam
+roscd hector_mapping
+cd launch
+gedit mapping_default.launch
+```
+
+- In mapping_default.launch:
+
+- change 
+<arg name="odom_frame" default="nav"/>
+to
+<arg name="odom_frame" default="base_footprint"/>
+
+- add
+<param name="tf_map_scanmatch_transform_frame_name" value="$(arg tf_map_scanmatch_transform_frame_name)" />
 
 
 ### 2. running the code
@@ -61,7 +96,7 @@ draw the lidar data and ball position
 rosrun data_integrate data_show_node
 ```
 
-# Change object detection test image
+### Change object detection test image in map(gazebo)
 
 - In terminal
 '''

@@ -38,8 +38,8 @@ int main(int argc, char **argv)
     ///////////////////////////////////
     // Write down your image director//
     //////////////////////////////////
-    image_1 = cv::imread("/home/nvidia/capstone_design_ROS/capstone_design/src/cnn_for_jetson/src/cat.325.jpg",CV_LOAD_IMAGE_COLOR);
-    image_2 = cv::imread("/home/nvidia/capstone_design_ROS/capstone_design/src/cnn_for_jetson/src/dog.232.jpg",CV_LOAD_IMAGE_COLOR);
+    image_1 = cv::imread("/home/humanlab/capstone2_ROS_gazebo/src/cnn_for_jetson/src/cat325.jpg",CV_LOAD_IMAGE_COLOR);
+    image_2 = cv::imread("/home/humanlab/capstone2_ROS_gazebo/src/cnn_for_jetson/src/dog232.jpg",CV_LOAD_IMAGE_COLOR);
 
     while(ros::ok){
 
