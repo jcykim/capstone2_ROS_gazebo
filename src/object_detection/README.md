@@ -13,6 +13,13 @@ After you install all the packages related to pytorch and torchvision, you shoul
 $ cd ~/capstone2_ROS_gazebo
 $ sudo pip3 install -r requirements.txt
 ```
+
+### Download pretrained weights
+```
+$ cd ~/capstone2_ROS_gazebo/src/object_detection/weights/
+$ bash download_weights.sh
+```
+
 *Tested in pytorch 1.6*
 
 ### Execution
