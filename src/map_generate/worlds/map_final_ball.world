@@ -107,9 +107,9 @@
       </link>
     </model>
     
-    <model name="test">
+    <model name="stop_sign">
       <static>true</static>
-      <pose>3.47 -0.45 0.42 1.5707 0 0</pose>
+      <pose>3.47 2 0.42 1.5707 0 0</pose>
       <link name="link">
         <visual name="test_visual">
           <geometry>
