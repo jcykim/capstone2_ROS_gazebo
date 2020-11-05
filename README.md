@@ -69,11 +69,7 @@ down load source file
 ```
 git clone https://github.com/kaistcapstone/capstone1_ROS_gazebo
 ```
-build the code
-```
-cd ~/capstone1_ROS_gazebo
-catkin_make
-```
+
 
 
 # Install object detection library
