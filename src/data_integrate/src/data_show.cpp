@@ -86,7 +86,8 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "data_show_node");
     ros::NodeHandle n;
 
-    ros::Subscriber sub = n.subscribe<sensor_msgs::LaserScan>("/scan", 1000, lidar_Callback);
+    //ros::Subscriber sub = n.subscribe<sensor_msgs::LaserScan>("/scan", 1000, lidar_Callback);
+    ros::Subscriber sub = n.subscribe<sensor_msgs::LaserScan>("/accumulated_cloud", 1000, lidar_Callback);
     ros::Subscriber sub1 = n.subscribe<core_msgs::ball_position>("/position", 1000, camera_Callback);
 
     while(ros::ok){

@@ -58,10 +58,10 @@ float X2_tmp[10];
 float Y2_tmp[10];
 float inverse_dist2[10];
 
-float X_r[100];
-float Y_r[100];
-float X_r2[100];
-float Y_r2[100];
+float X_r[10];
+float Y_r[10];
+float X_r2[10];
+float Y_r2[10];
 
 float X_g;
 float Y_g;
@@ -112,7 +112,6 @@ int cont_count = 0;
 bool flag_m20 = false;
 int mode16_count = 0;
 bool is_target_close_obstacle;
-
 
 
 //imu
@@ -198,13 +197,6 @@ int breaking = 0;
 int start_going = 0;
 
 bool isenabled = false;
-bool goBack = false; // change to false when da hapchilttae
-bool goMaze = false; // add
-bool detect_frontg;
-bool detect_frg;
-bool detect_flg;
-bool sameg;
-bool largeg;
 
 //#define RAD2DEG(x) ((x)*180./M_PI)
 
@@ -380,7 +372,7 @@ bool is_target_close(){
 	bool target_flag = false;
 	is_target_close_obstacle = false;
 	target_closest();
-	if(distance_target<0.55){
+	if(distance_target<0.5){
 		normal = 1/distance_btw(lidar_x, lidar_y, gB_x, gB_y);
 		if(distance_btw(r_pose[0], r_pose[1], gB_x + 0.5*normal*(gB_y - lidar_y), gB_y - 0.5*normal*(gB_x - lidar_x))>distance_btw(r_pose[0], r_pose[1], gB_x - 0.5*normal*(gB_y - lidar_y), gB_y + 0.5*normal*(gB_x - lidar_x))){
 			target_flag = true;
@@ -393,7 +385,7 @@ bool is_target_close(){
 			target_y = gB_y - 0.5*normal*(gB_x - lidar_x);
 		}
 		target_closest();
-		if(distance_target<0.45){
+		if(distance_target<0.4){
 			is_target_close_obstacle = true;
 		}
 		return true;
@@ -676,13 +668,6 @@ void lidar_Callback(const sensor_msgs::LaserScan::ConstPtr& scan)
 	fl = 3.5;
 	fr = 3.5;
 	min_index = 0;
-
-	detect_frontg = false;
-	detect_frg = false;
-	detect_flg = false;
-	largeg = false;
-	sameg = false;
-
 	detect_front = false;
 	detect_behind = false;
 	detect_left = false;
@@ -705,15 +690,6 @@ void lidar_Callback(const sensor_msgs::LaserScan::ConstPtr& scan)
 		if(isinf(lidar_distance[i])){
 			lidar_distance[i] = 3.5;
 		}else{
-			if (count > 105)
-			{
-				if (lidar_distance[75] - lidar_distance[105] < 0.05 && lidar_distance[75] - lidar_distance[105] >=-0.05) {
-					sameg=true;
-				}
-				if (lidar_distance[75] < lidar_distance[105]){
-					largeg = true;
-				}
-			} 
 			if(i ==0 || i == 10 || i == 20 || i == count-10 || i == count-20){
 				if(front>lidar_distance[i]){
 					front = lidar_distance[i];
@@ -742,18 +718,7 @@ void lidar_Callback(const sensor_msgs::LaserScan::ConstPtr& scan)
 			}
 		}	
     }
-
 	if(front<0.5){
-		detect_frontg = true;
-	}
-	if(front<0.5){
-		detect_frg = true;
-	}
-	if(front<0.5){
-		detect_flg = true;
-	}
-
-	if(front<0.38){
 		detect_front = true;
 	}
 
@@ -767,10 +732,10 @@ void lidar_Callback(const sensor_msgs::LaserScan::ConstPtr& scan)
 	if(behind < 0.35){
 		detect_behind =  true;
 	}
-	if(left<0.136){
+	if(left<0.137){
 		detect_left = true;
 	}
-	if(right<0.136){
+	if(right<0.137){
 		detect_right = true;
 	}
 	if(left<0.25){
@@ -779,10 +744,10 @@ void lidar_Callback(const sensor_msgs::LaserScan::ConstPtr& scan)
 	if(right<0.25){
 		detect_right2 = true;
 	}
-	if(fr<0.35){
+	if(fr<0.47){
 		detect_fr = true;
 	}
-	if(fl<0.35){
+	if(fl<0.47){
 		detect_fl = true;
 	}
 	if(!(detect_front || detect_fl || detect_fr)){
@@ -797,7 +762,7 @@ void b_camera_Callback(const core_msgs::ball_position::ConstPtr& position)
 		int max_i = 0;
 		start = true;
 		b_size = position->size;
-		if(b_size !=0&& b_size < 10){
+		if(b_size !=0){
 			detect_b = true;
 			for(int i = 0; i<b_size; i++){
 				X_tmp[i] = position->img_x[i];
@@ -818,7 +783,7 @@ void b_camera_Callback(const core_msgs::ball_position::ConstPtr& position)
 		}else{
 			// std::cout << "blue ball not detect"<<std::endl;
 			detect_b = false;
-		} 
+		}
 	
 }
 
@@ -826,11 +791,11 @@ void r_camera_Callback(const core_msgs::ball_position::ConstPtr& position)
 {
 		start = true;
 		r_size = position->size;
-        	if(r_size != 0 && r_size < 10){
+        if(r_size != 0){
 			detect_r = true;
 			for(int i = 0; i<r_size; i++){
 				X_r[i] = position->img_x[i];
-        			Y_r[i] = position->img_y[i];
+        		Y_r[i] = position->img_y[i];
 			}
 
 			// std::cout << "receive red ball"<<std::endl;
@@ -845,7 +810,7 @@ void r_camera2_Callback(const core_msgs::ball_position::ConstPtr& position)
 {
 		start = true;
 		r_size2 = position->size;
-        if(r_size2 != 0 && r_size2 < 10){
+        if(r_size2 != 0){
 			detect_r2 = true;
 			for(int i = 0; i<r_size2; i++){
 				X_r2[i] = position->img_x[i];
@@ -864,7 +829,7 @@ void g_camera_Callback(const core_msgs::ball_position::ConstPtr& position)
 {
 		start = true;
 		r_size = position->size;
-        if(r_size != 0&& r_size < 10){
+        if(r_size != 0){
 			detect_g = true;
 			X_g = position -> img_x[0];
 			Y_g = position -> img_y[0];
@@ -881,7 +846,7 @@ void b_camera2_Callback(const core_msgs::ball_position::ConstPtr& position)
 		int max_i = 0;
 		start = true;
 		b_size2 = position->size;
-		if(b_size2 !=0&& b_size2 < 10){
+		if(b_size2 !=0){
 			detect_b2 = true;
 			for(int i = 0; i<b_size2; i++){
 				X2_tmp[i] = position->img_x[i];
@@ -903,7 +868,7 @@ void b_camera2_Callback(const core_msgs::ball_position::ConstPtr& position)
 			// std::cout << "blue ball not detect"<<std::endl;
 			detect_b2 = false;
 		}
-
+	
 }
 
 
@@ -912,14 +877,12 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "data_integation");
     ros::NodeHandle n;
 	ros::Subscriber sub = n.subscribe<sensor_msgs::LaserScan>("/scan", 1000, lidar_Callback);
-
-        ros::Subscriber sub1 = n.subscribe<core_msgs::ball_position>("/position_b2", 1000, b_camera_Callback);
+    ros::Subscriber sub1 = n.subscribe<core_msgs::ball_position>("/position_b2", 1000, b_camera_Callback);
 	ros::Subscriber sub2 = n.subscribe<core_msgs::ball_position>("/position_r2", 1000, r_camera_Callback);
 	ros::Subscriber sub3 = n.subscribe<core_msgs::ball_position>("/position_g2", 1000, g_camera_Callback);
 	ros::Subscriber sub1_2 = n.subscribe<core_msgs::ball_position>("/position_b", 1000, b_camera2_Callback);
 	ros::Subscriber sub2_2 = n.subscribe<core_msgs::ball_position>("/position_r", 1000, r_camera2_Callback);
 	ros::Subscriber sub5 = n.subscribe<core_msgs::robot_position>("/robot_position", 1000, global_Callback);
-
 	ros::Publisher pub_left_front_wheel= n.advertise<std_msgs::Float64>("/model20/left_front_wheel_velocity_controller/command", 10);
 	ros::Publisher pub_right_front_wheel= n.advertise<std_msgs::Float64>("/model20/right_front_wheel_velocity_controller/command", 10);
 	ros::Publisher pub_left_rear_wheel= n.advertise<std_msgs::Float64>("/model20/left_rear_wheel_velocity_controller/command", 10);
@@ -939,48 +902,7 @@ int main(int argc, char **argv)
 			std_msgs::Float64 suspension_msg;
 
 			//center of x =0
-			if (goBack){
-				if (detect_behind && !goMaze ){
-					myStop(); // finish
-					goMaze = true;
-				}if(!goMaze){
-					if (!detect_frontg){
-						set_vel(50, 50, 50, 50);
-		std::cout<<"mode0"<<std::endl;
-					}else{
-						if (detect_frontg && !sameg ) {
-							set_vel(-30, 30, -30, 30); 
-		std::cout<<"rotating"<<std::endl;
-							
-						}else if (detect_frontg && sameg && largeg) {
-							set_vel(40, 50, 40, 50); 
-		std::cout<<"go left"<<std::endl;
-							
-						}else if (detect_frontg && sameg && !largeg  ) {
-							set_vel(50, 40, 50, 40);
-		std::cout<<"go right"<<std::endl;
-						}else {
-							go();
-		std::cout<<"mode4"<<std::endl;
-						}
-					}
-				}
-				
-
-			// std::cout << "Doing goBack! " << vel_front_left << " " << vel_front_right << std::endl;
-			left_front_wheel_msg.data=vel_front_left;   // set left_wheel velocity
-			right_front_wheel_msg.data=vel_front_right;  // set right_wheel velocity
-			left_rear_wheel_msg.data=vel_rear_left;
-			right_rear_wheel_msg.data=vel_rear_right;
-
-			pub_left_front_wheel.publish(left_front_wheel_msg);   // publish left_wheel velocity
-			pub_right_front_wheel.publish(right_front_wheel_msg);  // publish right_wheel velocity
-			pub_left_rear_wheel.publish(left_rear_wheel_msg);
-			pub_right_rear_wheel.publish(right_rear_wheel_msg);
-			}
-
-			//center of x =0
-			else if(start && isenabled){
+			if(start && isenabled){
 				if(mode == -1){
 					if(sub_mode == 0){
 						if(detect_g && X_g>0){
@@ -1446,16 +1368,6 @@ int main(int argc, char **argv)
 								rotate_right_tick_fast();
 							}
 						}
-						if(mode16_count == 4){
-							mode = 0;
-							sub_mode = 0;
-							start_going = 0;
-							myStop();
-							flag =1;
-							rot_left = is_turn_left(r_theta, goal_x-r_pose[0], goal_y-r_pose[1]);
-							c = 0;
-							mode16_count = 0;
-						}
 					}else if(sub_mode == 1){
 						std::cout<<"l_x = "<<target_x-r_pose[0] <<", l_y = "<<target_y-r_pose[1]<<std::endl;
 						if(distance_btw(r_pose[0], r_pose[1], target_x, target_y)<0.12 || flag_16){
@@ -1480,16 +1392,6 @@ int main(int argc, char **argv)
 							std::cout << "mode 16, go straight"<<std::endl;
 							go();
 						}
-						if(mode16_count == 4){
-							mode = 0;
-							sub_mode = 0;
-							start_going = 0;
-							myStop();
-							flag =1;
-							rot_left = is_turn_left(r_theta, goal_x-r_pose[0], goal_y-r_pose[1]);
-							c = 0;
-							mode16_count = 0;
-						}
 					}else if(sub_mode == 2){
 						if(abs(1-(DiffandNorm(gB_x, gB_y,r_pose[0],r_pose[1], 0)*cos(r_theta)+DiffandNorm(gB_x, gB_y,r_pose[0],r_pose[1], 1)*sin(r_theta)))<0.015){
 							sub_mode = 3;
@@ -1507,7 +1409,6 @@ int main(int argc, char **argv)
 							if((detect_b && X[0]> -0.007) || (detect_b2 && X2[0]>-0.007)){
 								sub_mode = 4;
 								myStop();
-								mode16_count = 0;
 							}else{
 								std::cout << "mode : 16, positive"<<std::endl;
 								rotate_left_tick();
@@ -1818,9 +1719,9 @@ int main(int argc, char **argv)
 						}else{
 							rotate_right();
 						}
-					}else if(c<40){
+					}else if(c<37){
 						std::cout << "mode : 12, back"<<std::endl;
-						set_vel(-25,-25,-25,-25);
+						set_vel(-20,-20,-20,-20);
 					}else{
 						c = 0;
 						flag_m12 = false;
@@ -1955,7 +1856,7 @@ int main(int argc, char **argv)
 					}
 				}
 
-				if((((mode < 4 || (mode == 6 && sub_mode !=1 && sub_mode != 2) || mode == 10 || (mode == 16 && sub_mode <2) || mode == 17 || (mode == 18 && sub_mode == 2)) && (((detect_r && Y_r[0]<0.37 && abs(X_r[0])<0.25) || (detect_r2 && Y_r2[0]<0.37 && abs(X_r2[0]<0.25)))|| detect_front || detect_fl || detect_fr)) || (mode == 5 && (detect_fl || detect_fr))) && (!detect_g || (detect_g && Y_g >0.6)) && !flag_m2){ // interrupt if the red ball is in front of the robot without blue ball -> go to mode 2
+				if((((mode < 4 || (mode == 6 && sub_mode !=1 && sub_mode != 2) || mode == 10 || (mode == 16 && sub_mode <2) || mode == 17 || (mode == 18 && sub_mode == 2)) && (((detect_r && Y_r[0]<0.34 && abs(X_r[0])<0.25) || (detect_r2 && Y_r2[0]<0.34 && abs(X_r2[0]<0.25)))|| detect_front || detect_fl || detect_fr)) || (mode == 5 && (detect_fl || detect_fr))) && (!detect_g || (detect_g && Y_g >0.6)) && !flag_m2){ // interrupt if the red ball is in front of the robot without blue ball -> go to mode 2
 					sub_mode = 0;
 					breaking = 0;
 					start_going = 0;
@@ -1963,9 +1864,6 @@ int main(int argc, char **argv)
 					flag_20 = false;
 					flag_m20 = false;
 					flag = 1;
-					if(mode == 16 && (sub_mode == 0 || sub_mode == 1)){
-						mode16_count++;
-					}
 					if(mode != 2 && mode !=3 && mode!=10){
 						store_mode = mode;
 					}
