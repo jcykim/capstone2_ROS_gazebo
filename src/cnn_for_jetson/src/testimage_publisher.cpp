@@ -38,14 +38,14 @@ int main(int argc, char **argv)
     ///////////////////////////////////
     // Write down your image director//
     //////////////////////////////////
-    image_1 = cv::imread("/home/humanlab/capstone2_ROS_gazebo/src/cnn_for_jetson/src/cat325.jpg",CV_LOAD_IMAGE_COLOR);
-    image_2 = cv::imread("/home/humanlab/capstone2_ROS_gazebo/src/cnn_for_jetson/src/dog232.jpg",CV_LOAD_IMAGE_COLOR);
+    image_1 = cv::imread("/home/jyj/myslam/src/cnn_for_jetson/src/cat325.jpg",CV_LOAD_IMAGE_COLOR);
+    image_2 = cv::imread("/home/jyj/myslam/src/cnn_for_jetson/src/dog232.jpg",CV_LOAD_IMAGE_COLOR);
 
     while(ros::ok){
 
       core_msgs::markermsg msg;
       msg.image1_available = 1;
-      msg.image2_available = 1;
+      msg.image2_available = 0;
       cv::imencode(".jpg", image_1, msg.cimage1.data);
       cv::imencode(".jpg", image_2, msg.cimage2.data);
       pub.publish(msg);
