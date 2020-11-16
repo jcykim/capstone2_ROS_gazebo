@@ -1,1 +1,7 @@
+<?xml version="1.0"?>
 
+<launch>
+
+    <node pkg="readmarker" type="readmarker_node" respawn="false" name="readmarker"/>
+
+</launch>
