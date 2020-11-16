@@ -36,7 +36,6 @@ add_dependencies(testimage_publisher core_msgs_generate_messages_cpp)
 target_link_libraries(testimage_publisher
   ${catkin_LIBRARIES} ${OpenCV_LIBS}
 )
-
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
