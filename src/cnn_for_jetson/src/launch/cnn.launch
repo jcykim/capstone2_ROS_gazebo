@@ -1,1 +1,5 @@
-d
+<?xml version="1.0"?>
+
+<launch>
+    <node pkg="cnn_for_jetson" type="testimage_publisher" respawn="false" name="testimage_publisher"/>
+</launch>
